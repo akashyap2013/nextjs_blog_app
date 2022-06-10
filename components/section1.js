@@ -6,8 +6,17 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Autoplay } from 'swiper';
 // Import Swiper styles
 import 'swiper/css';
+import fetcher from '../lib/fetcher'
+import Spinner from "./_child/spinner"
+import Error from "./_child/error"
+
 
 export default function section1() {
+
+    const { data, isLoading, isError } = fetcher('api/trending')
+    
+    if(isLoading) return <Spinner></Spinner>;
+    if(isError) return <Error></Error>
 
     SwiperCore.use([Autoplay])
 
@@ -28,11 +37,11 @@ export default function section1() {
                 //     delay: 2000
                 // }}
                 >
-                <SwiperSlide>{ Slide() }</SwiperSlide>
-                <SwiperSlide>{ Slide() }</SwiperSlide>
-                <SwiperSlide>{ Slide() }</SwiperSlide>
-                <SwiperSlide>{ Slide() }</SwiperSlide>
-                <SwiperSlide>{ Slide() }</SwiperSlide>
+                {
+                    data.map((value, index) => (
+                        <SwiperSlide key={index}><Slide data={value}></Slide></SwiperSlide>
+                    ))
+                }
             ...
             </Swiper>
 
@@ -42,25 +51,27 @@ export default function section1() {
   )
 }
 
-function Slide(){
+function Slide({ data }){
+
+    const { id, title, category, img, published, description ,author } = data;
+
     return (
         <div className="grid md:grid-cols-2">
             <div className="image">
-                <Link href={"/"}><a><Image src={"/images/img1.jpg"} width={600} height={600} /></a></Link>
+                <Link href={"/"}><a><Image src={img || "/"} width={600} height={600} /></a></Link>
             </div>
             <div className="info flex justify-center flex-col">
                 <div className="cat">
-                    <Link href={"/"}><a className="text-orange-600 hover:text-orange-800">Business, Travel</a></Link>
-                    <Link href={"/"}><a className="text-gray-800 hover:text-gray-600">- July 3, 2022</a></Link>
+                    <Link href={"/"}><a className="text-orange-600 hover:text-orange-800">{category || "Unknown"}</a></Link>
+                    <Link href={"/"}><a className="text-gray-800 hover:text-gray-600">- {published || "Unknown"}</a></Link>
                 </div>
                 <div className="title">
-                    <Link href={"/"}><a className="text-3xl md:text-6xl font-bold text-gray-800 hover:text-gray-600">Your most unhappy customers are your greatest source of learning</a></Link>
+                    <Link href={"/"}><a className="text-3xl md:text-6xl font-bold text-gray-800 hover:text-gray-600">{title || "Unknown"}</a></Link>
                 </div>
                 <p className="text-gray-500 py-3">
-                    Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind 
-                    text by the name of Lorem Ipsum decided to leave for the far World of Grammar.
+                    {description || "description"}
                 </p>
-                <Author></Author>
+                { author ? <Author></Author> : <></>}
             </div>
         </div>
     )
