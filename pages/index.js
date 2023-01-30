@@ -67,3 +67,15 @@ export default function Home() {
     </div>
   )
 }
+
+/*
+CODE EXPPLANATION:
+This code is a Next.js component for a home page of a web application. It uses the Head component from 
+next/head to set the title and description of the page, as well as a favicon. The component also imports 
+a CSS module from styles/Home.module.css for styling.
+
+The component returns a div with className of styles.container, which holds the main content and a footer.
+The main content includes a heading with a link to Next.js, a description encouraging the user to edit the code, 
+and a grid of four cards linking to different resources, such as documentation and examples. The footer contains a link to Vercel,
+]which is a deployment platform for Next.js applications.
+*/
